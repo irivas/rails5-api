@@ -10,20 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_22_092251) do
+ActiveRecord::Schema.define(version: 2019_03_22_113238) do
 
   create_table "audio_qualities", force: :cascade do |t|
     t.string "name"
     t.string "abbr"
     t.integer "position"
-    t.boolean "default"
-    t.boolean "translated"
+    t.boolean "default", default: false
+    t.boolean "translated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "genres", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "movies", force: :cascade do |t|
+    t.string "title"
+    t.integer "year"
+    t.string "plot"
+    t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

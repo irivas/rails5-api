@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   resources :audio_qualities
   resources :video_qualities
   resources :genres
+  resources :movies
 end
