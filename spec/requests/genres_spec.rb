@@ -1,16 +1,16 @@
 require 'rails_helper'
 
-RSpec.describe 'Audio Qualities API', type: :request do
+RSpec.describe 'Genres API', type: :request do
   # initialize test data
-  let!(:audio_qualities) { create_list(:audio_quality, 5) }
-  let(:audio_quality_id) { audio_qualities.first.id }
+  let!(:genres) { create_list(:genre, 5) }
+  let(:genre_id) { genres.first.id }
 
-  # Test suite for GET /audio_qualities
-  describe 'GET /audio_qualities' do
+  # Test suite for GET /genres
+  describe 'GET /genres' do
     # make HTTP get request before each example
-    before { get '/audio_qualities' }
+    before { get '/genres' }
 
-    it 'returns audio qualities' do
+    it 'returns genres' do
       # Note `json` is a custom helper to parse JSON responses
       expect(json).not_to be_empty
       expect(json['collection'].size).to eq(5)
@@ -21,14 +21,14 @@ RSpec.describe 'Audio Qualities API', type: :request do
     end
   end
 
-  # Test suite for GET /audio_qualities/:id
-  describe 'GET /audio_qualities/:id' do
-    before { get "/audio_qualities/#{audio_quality_id}" }
+  # Test suite for GET /genres/:id
+  describe 'GET /genres/:id' do
+    before { get "/genres/#{genre_id}" }
 
     context 'when the record exists' do
-      it 'returns the audio_quality' do
+      it 'returns the genre' do
         expect(json).not_to be_empty
-        expect(json['id']).to eq(audio_quality_id)
+        expect(json['id']).to eq(genre_id)
       end
 
       it 'returns status code 200' do
@@ -37,34 +37,27 @@ RSpec.describe 'Audio Qualities API', type: :request do
     end
 
     context 'when the record does not exist' do
-      let(:audio_quality_id) { 100 }
+      let(:genre_id) { 100 }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find AudioQuality/)
+        expect(response.body).to match(/Couldn't find Genre/)
       end
     end
   end
 
-  # Test suite for POST /audio_qualities
-  describe 'POST /audio_qualities' do
+  # Test suite for POST /genres
+  describe 'POST /genres' do
     # valid payload
-    let(:valid_attributes) do
-      {
-        name: 'XX',
-        abbr: 'XX',
-        position: 1,
-        default: false
-      }
-    end
+    let(:valid_attributes) { { name: 'XX' } }
 
     context 'when the request is valid' do
-      before { post '/audio_qualities', params: valid_attributes }
+      before { post '/genres', params: valid_attributes }
 
-      it 'creates a audio_quality' do
+      it 'creates a genre' do
         expect(json['name']).to eq('XX')
       end
 
@@ -74,7 +67,7 @@ RSpec.describe 'Audio Qualities API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/audio_qualities', params: { name: 'Foobar' } }
+      before { post '/genres', params: {  } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -82,17 +75,17 @@ RSpec.describe 'Audio Qualities API', type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Abbr can't be blank/)
+          .to match(/Validation failed: Name can't be blank/)
       end
     end
   end
 
-  # Test suite for PUT /audio_qualities/:id
-  describe 'PUT /audio_qualities/:id' do
-    let(:valid_attributes) { { name: 'XX', abbr: 'xx' } }
+  # Test suite for PUT /genres/:id
+  describe 'PUT /genres/:id' do
+    let(:valid_attributes) { { name: 'XX' } }
 
     context 'when the record exists' do
-      before { put "/audio_qualities/#{audio_quality_id}", params: valid_attributes }
+      before { put "/genres/#{genre_id}", params: valid_attributes }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -104,9 +97,9 @@ RSpec.describe 'Audio Qualities API', type: :request do
     end
   end
 
-  # Test suite for DELETE /audio_qualities/:id
-  describe 'DELETE /audio_qualities/:id' do
-    before { delete "/audio_qualities/#{audio_quality_id}" }
+  # Test suite for DELETE /genres/:id
+  describe 'DELETE /genres/:id' do
+    before { delete "/genres/#{genre_id}" }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
