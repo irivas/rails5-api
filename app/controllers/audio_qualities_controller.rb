@@ -5,30 +5,30 @@ class AudioQualitiesController < ApplicationController
   # GET /audio_qualities
   def index
     @audio_qualities = AudioQuality.all.paginate(page: @page, per_page: @per_page)
-    json_response(@audio_qualities, @page, @per_page)
+    json_response_index(@audio_qualities, @page, @per_page)
   end
 
   # POST /audio_qualities
   def create
     @audio_quality = AudioQuality.create!(audio_quality_params)
-    render json: @audio_quality, status: :created
+    json_response(@audio_quality, :created)
   end
 
   # GET /audio_qualities/:id
   def show
-    render json: @audio_quality
+    json_response(@audio_quality)
   end
 
   # PUT /audio_qualities/:id
   def update
     @audio_quality.update(audio_quality_params)
-    head :no_content
+    no_content_response
   end
 
   # DELETE /audio_qualities/:id
   def destroy
     @audio_quality.destroy
-    head :no_content
+    no_content_response
   end
 
   private

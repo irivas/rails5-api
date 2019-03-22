@@ -13,7 +13,7 @@ RSpec.describe 'Video Qualities API', type: :request do
     it 'returns video qualities' do
       # Note `json` is a custom helper to parse JSON responses
       expect(json).not_to be_empty
-      expect(json.size).to eq(5)
+      expect(json['collection'].size).to eq(5)
     end
 
     it 'returns status code 200' do
