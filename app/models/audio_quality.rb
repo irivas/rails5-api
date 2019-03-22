@@ -1,3 +1,3 @@
 class AudioQuality < ApplicationRecord
-  validates_presence_of :name, :abbr
+  validates :name, :abbr, presence: true
 end
