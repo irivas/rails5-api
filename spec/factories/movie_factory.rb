@@ -4,5 +4,9 @@ FactoryBot.define do
     sequence(:plot)   { Faker::Name.name }
     year              { 2000 }
     duration          { 95 }
+
+    trait :with_audio_qualities do
+      audio_qualities   { build_list(:audio_quality, 1) }
+    end
   end
 end
