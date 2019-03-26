@@ -10,16 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_22_113238) do
+ActiveRecord::Schema.define(version: 2019_03_25_145958) do
 
   create_table "audio_qualities", force: :cascade do |t|
     t.string "name"
     t.string "abbr"
     t.integer "position"
-    t.boolean "default", default: false
-    t.boolean "translated", default: false
+    t.boolean "default"
+    t.boolean "translated"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "audio_qualities_movies", force: :cascade do |t|
+    t.integer "audio_quality_id"
+    t.integer "movie_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["audio_quality_id", "movie_id"], name: "index_audio_qualities_movies_on_audio_quality_id_and_movie_id", unique: true
+    t.index ["audio_quality_id"], name: "index_audio_qualities_movies_on_audio_quality_id"
+    t.index ["movie_id"], name: "index_audio_qualities_movies_on_movie_id"
   end
 
   create_table "genres", force: :cascade do |t|

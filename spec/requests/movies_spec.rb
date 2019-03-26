@@ -4,6 +4,8 @@ RSpec.describe 'Movies API', type: :request do
   # initialize test data
   let!(:movies) { create_list(:movie, 5) }
   let(:movie_id) { movies.first.id }
+  let!(:audio_quality) { create(:audio_quality) }
+  let(:audio_quality_id) { audio_quality.id }
 
   # Test suite for GET /movies
   describe 'GET /movies' do
@@ -33,6 +35,25 @@ RSpec.describe 'Movies API', type: :request do
 
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
+      end
+
+      context 'and has no audio qualities' do
+        it 'returns empty audio qualities' do
+          expect(json['audio_qualities']).to be_empty
+        end
+      end
+
+      context 'and has audio qualities' do
+        before do
+          create(:audio_qualities_movie,
+            movie_id: movie_id,
+            audio_quality_id: audio_quality_id)
+          get "/movies/#{movie_id}"
+        end
+
+        it 'returns the audio qualities' do
+          expect(json['audio_qualities'].first['id']).to eq(audio_quality_id)
+        end
       end
     end
 
@@ -67,6 +88,26 @@ RSpec.describe 'Movies API', type: :request do
       end
     end
 
+    context 'when the request has audio quality attributes' do
+      let(:movie_attributes) do
+        {
+          title: 'Dumbo',
+          year: 1950,
+          audio_quality_ids: [audio_quality_id]
+        }
+      end
+      before { post '/movies', params: movie_attributes }
+
+      it 'creates a movie' do
+        expect(json['title']).to eq('Dumbo')
+        expect(json['year']).to eq(1950)
+      end
+
+      it 'returns the audio qualities' do
+        expect(json['audio_qualities'].first['id']).to eq(audio_quality_id)
+      end
+    end
+
     context 'when the request is invalid' do
       before { post '/movies', params: { title: 'Matrix' } }
 
@@ -94,6 +135,26 @@ RSpec.describe 'Movies API', type: :request do
 
       it 'returns status code 204' do
         expect(response).to have_http_status(204)
+      end
+    end
+
+    context 'when the request has audio quality attributes' do
+      let(:movie_attributes) do
+        {
+          title: 'La venganza del conde de MonteCristo',
+          year: 1999,
+          audio_quality_ids: [audio_quality_id]
+        }
+      end
+      before do
+        put "/movies/#{movie_id}", params: movie_attributes
+        get "/movies/#{movie_id}"
+      end
+
+      it 'returns the audio qualities' do
+        expect(json['title']).to eq('La venganza del conde de MonteCristo')
+        expect(json['year']).to eq(1999)
+        expect(json['audio_qualities'].first['id']).to eq(audio_quality_id)
       end
     end
   end

@@ -1,9 +1,9 @@
 module Response
-  def json_response_index(object, page, per_page)
+  def json_response_index(collection, page, per_page)
     render status: :ok,
     json: {
-      collection: object,
-      meta: { total: object.count, page: page, per_page: per_page }
+      collection: collection,
+      meta: { total: collection.count, page: page, per_page: per_page }
     }
   end
 
