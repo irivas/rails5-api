@@ -10,6 +10,7 @@ RSpec.describe Movie, type: :model do
   it { is_expected.to validate_presence_of(:year) }
 
   it { is_expected.to have_many(:audio_qualities) }
+  it { is_expected.to have_many(:video_qualities) }
 
   it { is_expected.to respond_to(:as_json) }
 
@@ -27,7 +28,8 @@ RSpec.describe Movie, type: :model do
         year: 2019,
         plot: 'Movie plot',
         duration: 120,
-        audio_qualities: []
+        audio_qualities: [],
+        video_qualities: []
       }.to_json
     end
 

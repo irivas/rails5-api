@@ -6,6 +6,8 @@ RSpec.describe 'Movies API', type: :request do
   let(:movie_id) { movies.first.id }
   let!(:audio_quality) { create(:audio_quality) }
   let(:audio_quality_id) { audio_quality.id }
+  let!(:video_quality) { create(:video_quality) }
+  let(:video_quality_id) { video_quality.id }
 
   # Test suite for GET /movies
   describe 'GET /movies' do
@@ -55,6 +57,25 @@ RSpec.describe 'Movies API', type: :request do
           expect(json['audio_qualities'].first['id']).to eq(audio_quality_id)
         end
       end
+
+      context 'and has no video qualities' do
+        it 'returns empty video qualities' do
+          expect(json['video_qualities']).to be_empty
+        end
+      end
+
+      context 'and has video qualities' do
+        before do
+          create(:video_qualities_movie,
+            movie_id: movie_id,
+            video_quality_id: video_quality_id)
+            get "/movies/#{movie_id}"
+        end
+
+        it 'returns the video qualities' do
+          expect(json['video_qualities'].first['id']).to eq(video_quality_id)
+        end
+      end
     end
 
     context 'when the record does not exist' do
@@ -96,6 +117,7 @@ RSpec.describe 'Movies API', type: :request do
           audio_quality_ids: [audio_quality_id]
         }
       end
+
       before { post '/movies', params: movie_attributes }
 
       it 'creates a movie' do
@@ -105,6 +127,27 @@ RSpec.describe 'Movies API', type: :request do
 
       it 'returns the audio qualities' do
         expect(json['audio_qualities'].first['id']).to eq(audio_quality_id)
+      end
+    end
+
+    context 'when the request has video quality attributes' do
+      let(:movie_attributes) do
+        {
+          title: 'Dumbo 2',
+          year: 1950,
+          video_quality_ids: [video_quality_id]
+        }
+      end
+
+      before { post '/movies', params: movie_attributes }
+
+      it 'creates a movie' do
+        expect(json['title']).to eq('Dumbo 2')
+        expect(json['year']).to eq(1950)
+      end
+
+      it 'returns the video qualities' do
+        expect(json['video_qualities'].first['id']).to eq(video_quality_id)
       end
     end
 
@@ -155,6 +198,27 @@ RSpec.describe 'Movies API', type: :request do
         expect(json['title']).to eq('La venganza del conde de MonteCristo')
         expect(json['year']).to eq(1999)
         expect(json['audio_qualities'].first['id']).to eq(audio_quality_id)
+      end
+    end
+
+    context 'when the request has video quality attributes' do
+      let(:movie_attributes) do
+        {
+          title: 'Manolo el del bombo',
+          year: 1999,
+          video_quality_ids: [video_quality_id]
+        }
+      end
+
+      before do
+        put "/movies/#{movie_id}", params: movie_attributes
+        get "/movies/#{movie_id}"
+      end
+
+      it 'returns the video qualities' do
+        expect(json['title']).to eq('Manolo el del bombo')
+        expect(json['year']).to eq(1999)
+        expect(json['video_qualities'].first['id']).to eq(video_quality_id)
       end
     end
   end

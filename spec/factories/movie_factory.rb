@@ -8,5 +8,9 @@ FactoryBot.define do
     trait :with_audio_qualities do
       audio_qualities   { build_list(:audio_quality, 1) }
     end
+
+    trait :with_video_qualities do
+      video_qualities   { build_list(:video_quality, 1) }
+    end
   end
 end
