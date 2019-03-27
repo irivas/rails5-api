@@ -11,6 +11,7 @@ RSpec.describe Movie, type: :model do
 
   it { is_expected.to have_many(:audio_qualities) }
   it { is_expected.to have_many(:video_qualities) }
+  it { is_expected.to have_many(:genres) }
 
   it { is_expected.to respond_to(:as_json) }
 
@@ -29,7 +30,8 @@ RSpec.describe Movie, type: :model do
         plot: 'Movie plot',
         duration: 120,
         audio_qualities: [],
-        video_qualities: []
+        video_qualities: [],
+        genres: []
       }.to_json
     end
 

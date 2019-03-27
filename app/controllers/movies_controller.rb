@@ -33,7 +33,10 @@ class MoviesController < ApplicationController
 
   private
   def movie_params
-    params.permit(:title, :year, :plot, :duration, audio_quality_ids: [], video_quality_ids: [])
+    params.permit(
+      :title, :year, :plot, :duration,
+      audio_quality_ids: [], video_quality_ids: [], genre_ids: []
+    )
   end
 
   def set_movie

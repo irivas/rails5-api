@@ -4,10 +4,15 @@ RSpec.describe 'Movies API', type: :request do
   # initialize test data
   let!(:movies) { create_list(:movie, 5) }
   let(:movie_id) { movies.first.id }
+
   let!(:audio_quality) { create(:audio_quality) }
   let(:audio_quality_id) { audio_quality.id }
+
   let!(:video_quality) { create(:video_quality) }
   let(:video_quality_id) { video_quality.id }
+
+  let!(:genre) { create(:genre) }
+  let(:genre_id) { genre.id }
 
   # Test suite for GET /movies
   describe 'GET /movies' do
@@ -74,6 +79,25 @@ RSpec.describe 'Movies API', type: :request do
 
         it 'returns the video qualities' do
           expect(json['video_qualities'].first['id']).to eq(video_quality_id)
+        end
+      end
+
+      context 'and has no genres' do
+        it 'returns empty genres' do
+          expect(json['genres']).to be_empty
+        end
+      end
+
+      context 'and has genres' do
+        before do
+          create(:genres_movie,
+            movie_id: movie_id,
+            genre_id: genre_id)
+          get "/movies/#{movie_id}"
+        end
+
+        it 'returns the genres' do
+          expect(json['genres'].first['id']).to eq(genre_id)
         end
       end
     end
@@ -151,6 +175,26 @@ RSpec.describe 'Movies API', type: :request do
       end
     end
 
+    context 'when the request has genre attributes' do
+      let(:movie_attributes) do
+        {
+          title: 'Dumbo 3',
+          year: 1950,
+          genre_ids: [genre_id]
+        }
+      end
+      before { post '/movies', params: movie_attributes }
+
+      it 'creates a movie' do
+        expect(json['title']).to eq('Dumbo 3')
+        expect(json['year']).to eq(1950)
+      end
+
+      it 'returns the genres' do
+        expect(json['genres'].first['id']).to eq(genre_id)
+      end
+    end
+
     context 'when the request is invalid' do
       before { post '/movies', params: { title: 'Matrix' } }
 
@@ -219,6 +263,26 @@ RSpec.describe 'Movies API', type: :request do
         expect(json['title']).to eq('Manolo el del bombo')
         expect(json['year']).to eq(1999)
         expect(json['video_qualities'].first['id']).to eq(video_quality_id)
+      end
+    end
+
+    context 'when the request has genre attributes' do
+      let(:movie_attributes) do
+        {
+          title: 'Leyendas de pasión',
+          year: 1999,
+          genre_ids: [genre_id]
+        }
+      end
+      before do
+        put "/movies/#{movie_id}", params: movie_attributes
+        get "/movies/#{movie_id}"
+      end
+
+      it 'returns the genres' do
+        expect(json['title']).to eq('Leyendas de pasión')
+        expect(json['year']).to eq(1999)
+        expect(json['genres'].first['id']).to eq(genre_id)
       end
     end
   end

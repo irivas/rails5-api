@@ -12,5 +12,9 @@ FactoryBot.define do
     trait :with_video_qualities do
       video_qualities   { build_list(:video_quality, 1) }
     end
+
+    trait :with_genres do
+      genres   { build_list(:genre, 1) }
+    end
   end
 end
