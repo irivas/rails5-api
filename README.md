@@ -4,9 +4,6 @@ RESTful JSON API With Rails 5.
 
 Public url: https://protected-atoll-83840.herokuapp.com
 
-## Runscope
-https://www.runscope.com/radar/0ftga8t58p9z
-
 ## Endpoints 
 | Model 	| Method |
 |-------	|--------|
