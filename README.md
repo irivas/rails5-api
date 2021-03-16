@@ -2,8 +2,6 @@
 ## Overview
 RESTful JSON API With Rails 5.
 
-Public url: https://protected-atoll-83840.herokuapp.com
-
 ## Endpoints 
 | Model 	| Method |
 |-------	|--------|
