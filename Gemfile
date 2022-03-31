@@ -7,7 +7,7 @@ ruby '2.6.2'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 4.3'
 
 gem 'will_paginate', '~> 3.1.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
